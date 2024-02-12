@@ -1,4 +1,4 @@
-package com.example.medsynex.controller.auth;
+package com.example.medsynex.controller;
 
 import com.example.medsynex.config.JwtUtils;
 import com.example.medsynex.exception.BusinessException;
@@ -71,7 +71,7 @@ public class AuthController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, createCookie(refreshToken).toString());
-            SignInResponseDTO response = new SignInResponseDTO(jwt, "", userDetails.getId(),
+            SignInResponseDTO response = new SignInResponseDTO(jwt, userDetails.getId(),
                     userDetails.getUsername(), userDetails.getEmail(), roles);
 
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
@@ -81,7 +81,7 @@ public class AuthController {
     }
 
     @GetMapping("/refreshToken")
-    public ResponseEntity<?> checkCookie(HttpServletRequest request) throws BusinessException {
+    public ResponseEntity<RefreshTokenResponseDTO> checkCookie(HttpServletRequest request) throws BusinessException {
         Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals(REFRESH_TOKEN_COOKIE_NAME)).findFirst();
         if (cookie.isPresent()) {
             return ResponseEntity.ok(new RefreshTokenResponseDTO(refreshTokenService.exchangeRefreshToken(cookie.get().getValue())));

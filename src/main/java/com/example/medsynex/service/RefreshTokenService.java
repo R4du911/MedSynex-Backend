@@ -4,6 +4,7 @@ import com.example.medsynex.config.JwtUtils;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.RefreshToken;
+import com.example.medsynex.model.User;
 import com.example.medsynex.repository.RefreshTokenRepository;
 import com.example.medsynex.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,12 @@ public class RefreshTokenService {
         RefreshToken rt = new RefreshToken();
         rt.setRefreshToken(uuid);
         rt.setExpiryDate(Instant.now().plusSeconds(84000));
-        rt.setUser(userRepository.findById(userId).get());
-        refreshTokenRepository.save(rt);
+
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            rt.setUser(user.get());
+            refreshTokenRepository.save(rt);
+        }
     }
 
 
