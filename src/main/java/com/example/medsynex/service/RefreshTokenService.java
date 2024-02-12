@@ -35,7 +35,7 @@ public class RefreshTokenService {
 
     public void createRefreshToken(String uuid, Long userId) {
         RefreshToken rt = new RefreshToken();
-        rt.setRefreshToken(uuid);
+        rt.setToken(uuid);
         rt.setExpiryDate(Instant.now().plusSeconds(84000));
 
         Optional<User> user = userRepository.findById(userId);

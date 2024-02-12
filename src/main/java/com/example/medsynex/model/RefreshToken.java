@@ -11,7 +11,7 @@ import java.time.Instant;
 public class RefreshToken {
 
     @Id
-    private String refreshToken;
+    private String token;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

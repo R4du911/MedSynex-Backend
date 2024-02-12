@@ -20,16 +20,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -51,16 +48,12 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDTO loginRequest) throws BusinessException {
 
         try {
-
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-            List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
 
             String jwt = jwtUtils.generateJwtToken(userDetails);
 
@@ -71,8 +64,7 @@ public class AuthController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, createCookie(refreshToken).toString());
-            SignInResponseDTO response = new SignInResponseDTO(jwt, userDetails.getId(),
-                    userDetails.getUsername(), userDetails.getEmail(), roles);
+            SignInResponseDTO response = new SignInResponseDTO(jwt);
 
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         } catch (AuthenticationException e) {
