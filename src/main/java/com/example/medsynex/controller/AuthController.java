@@ -12,6 +12,7 @@ import com.example.medsynex.service.UserDetailsServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -23,8 +24,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,10 +42,15 @@ public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
     @Autowired
     private RefreshTokenService refreshTokenService;
+
     @Autowired
     JwtUtils jwtUtils;
+
+    @Value("${security.decipherKey}")
+    private String key;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -48,8 +59,10 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDTO loginRequest) throws BusinessException {
 
         try {
+            String decryptedPassword = decrypt(loginRequest.getPassword());
+
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), decryptedPassword));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -88,5 +101,19 @@ public class AuthController {
                 .sameSite("None")
                 .path("/auth/refreshToken")
                 .build();
+    }
+
+    private String decrypt(String toDecrypt) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(key.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(toDecrypt));
+            return new String(cipherText);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
