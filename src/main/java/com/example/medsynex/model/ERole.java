@@ -1,5 +1,5 @@
 package com.example.medsynex.model;
 
 public enum ERole {
-    ADM
+    PAT,FAM_DOC,DOC,LAB
 }

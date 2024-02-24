@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**")
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**","/user/register")
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

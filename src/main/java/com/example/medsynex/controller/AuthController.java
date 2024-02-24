@@ -59,7 +59,7 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDTO loginRequest) throws BusinessException {
 
         try {
-            String decryptedPassword = decrypt(loginRequest.getPassword());
+            String decryptedPassword = decrypt(loginRequest.getPassword(), key);
 
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), decryptedPassword));
@@ -78,6 +78,7 @@ public class AuthController {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, createCookie(refreshToken).toString());
             SignInResponseDTO response = new SignInResponseDTO(jwt);
+            System.out.println(response);
 
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         } catch (AuthenticationException e) {
@@ -103,7 +104,7 @@ public class AuthController {
                 .build();
     }
 
-    private String decrypt(String toDecrypt) {
+    public static String decrypt(String toDecrypt, String key) {
         try {
             IvParameterSpec iv = new IvParameterSpec(key.getBytes(StandardCharsets.UTF_8));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
