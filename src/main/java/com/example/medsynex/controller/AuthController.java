@@ -77,8 +77,7 @@ public class AuthController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE, createCookie(refreshToken).toString());
-            SignInResponseDTO response = new SignInResponseDTO(jwt);
-            System.out.println(response);
+            SignInResponseDTO response = new SignInResponseDTO(jwt, userDetails.isFirstLogin());
 
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         } catch (AuthenticationException e) {

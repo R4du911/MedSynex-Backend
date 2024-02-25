@@ -38,6 +38,8 @@ public class User implements Principal {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    private boolean firstLogin;
+
     @Override
     public String getName() {
         return null;

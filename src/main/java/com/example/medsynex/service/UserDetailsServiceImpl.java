@@ -82,6 +82,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(decryptedPassword))
                 .roles(Set.of(role))
+                .firstLogin(true)
                 .build();
 
         userRepository.save(userToSave);
