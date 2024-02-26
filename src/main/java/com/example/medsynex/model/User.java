@@ -40,6 +40,22 @@ public class User implements Principal {
 
     private boolean firstLogin;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "family_doctor_id")
+    private FamilyDoctor familyDoctor;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "laboratory_id")
+    private Laboratory laboratory;
+
     @Override
     public String getName() {
         return null;
