@@ -41,13 +41,13 @@ public class AuthController {
     private static final String REFRESH_TOKEN_COOKIE_NAME = "RefreshTokenCookie";
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private RefreshTokenService refreshTokenService;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
 
     @Value("${security.decipherKey}")
     private String key;
@@ -98,7 +98,7 @@ public class AuthController {
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, token)
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(1))
-                .sameSite("None")
+                .sameSite("Lax")
                 .path("/auth/refreshToken")
                 .build();
     }

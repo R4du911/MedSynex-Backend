@@ -3,6 +3,8 @@ package com.example.medsynex.service;
 import com.example.medsynex.controller.AuthController;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
+import com.example.medsynex.model.ERole;
+import com.example.medsynex.model.Laboratory;
 import com.example.medsynex.model.Role;
 import com.example.medsynex.model.User;
 import com.example.medsynex.model.dto.RegisterRequestDTO;
@@ -86,6 +88,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
 
         userRepository.save(userToSave);
+    }
+
+    public void registerUserAsLaboratory(String username, Laboratory laboratory) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        user.setFirstLogin(false);
+        user.setLaboratory(laboratory);
+
+        userRepository.save(user);
     }
 
     public boolean validatePassword(String password) {

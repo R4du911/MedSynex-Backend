@@ -14,7 +14,8 @@ public enum BusinessExceptionCode {
     INVALID_REFRESH_TOKEN("INVALID_REFRESH_TOKEN", "Session is invalid"),
     INVALID_USER_FORMAT("INVALID_USER_FORMAT", "User has an invalid format"),
     USERNAME_ALREADY_REGISTERED("USERNAME_ALREADY_REGISTERED", "User already registered with this username"),
-    EMAIL_ALREADY_REGISTERED("EMAIL_ALREADY_REGISTERED","User already registered with this email");
+    EMAIL_ALREADY_REGISTERED("EMAIL_ALREADY_REGISTERED","User already registered with this email"),
+    INVALID_USER("INVALID_USER", "User is not registered");
 
     private String errorId;
 
