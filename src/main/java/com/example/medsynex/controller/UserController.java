@@ -26,7 +26,7 @@ public class UserController {
         return this.authenticator.authenticateUser(new LoginRequestDTO(registerRequest.getUsername(), registerRequest.getPassword()));
     }
 
-    @PostMapping("/register/{username}")
+    @PostMapping("/register/laboratory/{username}")
     public ResponseEntity<String> registerUserAsLaboratory(@PathVariable String username, @RequestBody Laboratory laboratory) throws BusinessException {
         this.userService.registerUserAsLaboratory(username, laboratory);
         return new ResponseEntity<>(HttpStatus.OK);
