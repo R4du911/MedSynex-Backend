@@ -3,11 +3,10 @@ package com.example.medsynex.service;
 import com.example.medsynex.controller.AuthController;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
-import com.example.medsynex.model.ERole;
-import com.example.medsynex.model.Laboratory;
-import com.example.medsynex.model.Role;
-import com.example.medsynex.model.User;
+import com.example.medsynex.model.*;
+import com.example.medsynex.model.dto.RegisterAsDoctorRequestDTO;
 import com.example.medsynex.model.dto.RegisterRequestDTO;
+import com.example.medsynex.repository.DoctorRepository;
 import com.example.medsynex.repository.RoleRepository;
 import com.example.medsynex.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.print.Doc;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Set;
@@ -35,14 +35,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final DoctorRepository doctorRepository;
 
     @Value("${security.decipherKey}")
     private String key;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository, DoctorRepository doctorRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.doctorRepository = doctorRepository;
     }
 
     @Override
@@ -88,6 +90,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
 
         userRepository.save(userToSave);
+    }
+
+    public void registerUserAsDoctor(String username, RegisterAsDoctorRequestDTO registerAsDoctorRequestDTO) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        Doctor doctorToSave = Doctor.builder()
+                .hospital(registerAsDoctorRequestDTO.getHospital())
+                .specialization(registerAsDoctorRequestDTO.getSpecialization())
+                .build();
+
+        doctorRepository.save(doctorToSave);
+
+        user.setFirstLogin(false);
+        user.setDoctor(doctorToSave);
+
+        userRepository.save(user);
     }
 
     public void registerUserAsLaboratory(String username, Laboratory laboratory) throws BusinessException {
