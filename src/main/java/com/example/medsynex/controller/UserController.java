@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/register/doctor/{username}")
     public ResponseEntity<String> registerUserAsDoctor(@PathVariable String username, @RequestBody RegisterAsDoctorRequestDTO registerAsDoctorRequestDTO) throws BusinessException {
-        this.userService.registerUserAsDoctor(username, registerAsDoctorRequestDTO);
+        this.userService.registerUserAsDoctor(username, registerAsDoctorRequestDTO.getHospital(), registerAsDoctorRequestDTO.getSpecialization());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

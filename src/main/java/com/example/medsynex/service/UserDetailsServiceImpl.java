@@ -92,13 +92,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(userToSave);
     }
 
-    public void registerUserAsDoctor(String username, RegisterAsDoctorRequestDTO registerAsDoctorRequestDTO) throws BusinessException {
+    public void registerUserAsDoctor(String username, Hospital hospital, Specialization specialization) throws BusinessException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
 
         Doctor doctorToSave = Doctor.builder()
-                .hospital(registerAsDoctorRequestDTO.getHospital())
-                .specialization(registerAsDoctorRequestDTO.getSpecialization())
+                .hospital(hospital)
+                .specialization(specialization)
                 .build();
 
         doctorRepository.save(doctorToSave);
