@@ -107,7 +107,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         familyDoctorRepository.save(familyDoctorToSave);
 
         user.setFirstLogin(false);
+        user.setPatient(null);
         user.setFamilyDoctor(familyDoctorToSave);
+        user.setDoctor(null);
+        user.setLaboratory(null);
 
         userRepository.save(user);
     }
@@ -124,7 +127,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         doctorRepository.save(doctorToSave);
 
         user.setFirstLogin(false);
+        user.setPatient(null);
+        user.setFamilyDoctor(null);
         user.setDoctor(doctorToSave);
+        user.setLaboratory(null);
 
         userRepository.save(user);
     }
@@ -134,6 +140,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
 
         user.setFirstLogin(false);
+        user.setPatient(null);
+        user.setFamilyDoctor(null);
+        user.setDoctor(null);
         user.setLaboratory(laboratory);
 
         userRepository.save(user);
