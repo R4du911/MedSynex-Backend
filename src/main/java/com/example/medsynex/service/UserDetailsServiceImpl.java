@@ -7,6 +7,7 @@ import com.example.medsynex.model.*;
 import com.example.medsynex.model.dto.RegisterAsDoctorRequestDTO;
 import com.example.medsynex.model.dto.RegisterRequestDTO;
 import com.example.medsynex.repository.DoctorRepository;
+import com.example.medsynex.repository.FamilyDoctorRepository;
 import com.example.medsynex.repository.RoleRepository;
 import com.example.medsynex.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +33,21 @@ import java.util.regex.Pattern;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DoctorRepository doctorRepository;
+    private final FamilyDoctorRepository familyDoctorRepository;
 
     @Value("${security.decipherKey}")
     private String key;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository, DoctorRepository doctorRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                                  DoctorRepository doctorRepository, FamilyDoctorRepository familyDoctorRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.doctorRepository = doctorRepository;
+        this.familyDoctorRepository = familyDoctorRepository;
     }
 
     @Override
@@ -90,6 +93,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
 
         userRepository.save(userToSave);
+    }
+
+    public void registerUserAsFamilyDoctor(String username, Dispensary dispensary) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        FamilyDoctor familyDoctorToSave = FamilyDoctor.builder()
+                .dispensary(dispensary)
+                .nrPatients(0)
+                .build();
+
+        familyDoctorRepository.save(familyDoctorToSave);
+
+        user.setFirstLogin(false);
+        user.setFamilyDoctor(familyDoctorToSave);
+
+        userRepository.save(user);
     }
 
     public void registerUserAsDoctor(String username, Hospital hospital, Specialization specialization) throws BusinessException {

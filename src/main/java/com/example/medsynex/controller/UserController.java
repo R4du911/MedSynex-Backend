@@ -1,6 +1,7 @@
 package com.example.medsynex.controller;
 
 import com.example.medsynex.exception.BusinessException;
+import com.example.medsynex.model.Dispensary;
 import com.example.medsynex.model.Laboratory;
 import com.example.medsynex.model.dto.LoginRequestDTO;
 import com.example.medsynex.model.dto.RegisterAsDoctorRequestDTO;
@@ -25,6 +26,12 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDTO registerRequest) throws BusinessException {
         this.userService.registerUser(registerRequest);
         return this.authenticator.authenticateUser(new LoginRequestDTO(registerRequest.getUsername(), registerRequest.getPassword()));
+    }
+
+    @PostMapping("/register/familyDoctor/{username}")
+    public ResponseEntity<String> registerUserAsFamilyDoctor(@PathVariable String username, @RequestBody Dispensary dispensary) throws BusinessException {
+        this.userService.registerUserAsFamilyDoctor(username, dispensary);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/doctor/{username}")
