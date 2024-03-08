@@ -6,10 +6,7 @@ import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.*;
 import com.example.medsynex.model.dto.RegisterAsDoctorRequestDTO;
 import com.example.medsynex.model.dto.RegisterRequestDTO;
-import com.example.medsynex.repository.DoctorRepository;
-import com.example.medsynex.repository.FamilyDoctorRepository;
-import com.example.medsynex.repository.RoleRepository;
-import com.example.medsynex.repository.UserRepository;
+import com.example.medsynex.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.print.Doc;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,21 +31,26 @@ import java.util.regex.Pattern;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final FamilyDoctorRequestService familyDoctorRequestService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DoctorRepository doctorRepository;
     private final FamilyDoctorRepository familyDoctorRepository;
+    private final PatientRepository patientRepository;
 
     @Value("${security.decipherKey}")
     private String key;
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                                  DoctorRepository doctorRepository, FamilyDoctorRepository familyDoctorRepository) {
+                                  DoctorRepository doctorRepository, FamilyDoctorRepository familyDoctorRepository,
+                                  PatientRepository patientRepository, FamilyDoctorRequestService familyDoctorRequestService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.doctorRepository = doctorRepository;
         this.familyDoctorRepository = familyDoctorRepository;
+        this.patientRepository = patientRepository;
+        this.familyDoctorRequestService = familyDoctorRequestService;
     }
 
     @Override
@@ -56,6 +59,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
+    }
+
+    public List<User> getAllUsersWhichAreRegisteredAsFamilyDoctors() {
+        return this.userRepository.findAllByFamilyDoctorIsNotNull();
     }
 
     public void registerUser(RegisterRequestDTO registerRequest) throws BusinessException {
@@ -95,6 +102,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(userToSave);
     }
 
+    public void registerUserAsPatient(String username, Long cnp, FamilyDoctor selectedFamilyDoctor) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        Patient patientToSave = Patient.builder()
+                .cnp(cnp)
+                .familyDoctor(null)
+                .build();
+
+        Patient patientFromDb = patientRepository.save(patientToSave);
+
+        user.setFirstLogin(false);
+        user.setPatient(patientFromDb);
+        user.setFamilyDoctor(null);
+        user.setDoctor(null);
+        user.setLaboratory(null);
+
+        userRepository.save(user);
+
+        familyDoctorRequestService.makeAFamilyDoctorRequest(username, selectedFamilyDoctor);
+    }
+
+
     public void registerUserAsFamilyDoctor(String username, Dispensary dispensary) throws BusinessException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
@@ -104,11 +134,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .nrPatients(0)
                 .build();
 
-        familyDoctorRepository.save(familyDoctorToSave);
+        FamilyDoctor familyDoctorFromDb = familyDoctorRepository.save(familyDoctorToSave);
 
         user.setFirstLogin(false);
         user.setPatient(null);
-        user.setFamilyDoctor(familyDoctorToSave);
+        user.setFamilyDoctor(familyDoctorFromDb);
         user.setDoctor(null);
         user.setLaboratory(null);
 
@@ -124,12 +154,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .specialization(specialization)
                 .build();
 
-        doctorRepository.save(doctorToSave);
+        Doctor doctorFromDB = doctorRepository.save(doctorToSave);
 
         user.setFirstLogin(false);
         user.setPatient(null);
         user.setFamilyDoctor(null);
-        user.setDoctor(doctorToSave);
+        user.setDoctor(doctorFromDB);
         user.setLaboratory(null);
 
         userRepository.save(user);
