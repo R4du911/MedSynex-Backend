@@ -3,6 +3,7 @@ package com.example.medsynex.service;
 import com.example.medsynex.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    @Getter
     private boolean firstLogin;
 
     public UserDetailsImpl(Long id, String username, String email, String password,
@@ -85,10 +87,6 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public boolean isFirstLogin() {
-        return firstLogin;
     }
 
 }

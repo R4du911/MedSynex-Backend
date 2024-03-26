@@ -15,7 +15,8 @@ public enum BusinessExceptionCode {
     INVALID_USER_FORMAT("INVALID_USER_FORMAT", "User has an invalid format"),
     USERNAME_ALREADY_REGISTERED("USERNAME_ALREADY_REGISTERED", "User already registered with this username"),
     EMAIL_ALREADY_REGISTERED("EMAIL_ALREADY_REGISTERED","User already registered with this email"),
-    INVALID_USER("INVALID_USER", "User is not registered");
+    INVALID_USER("INVALID_USER", "User is not registered"),
+    PATIENT_ALREADY_REGISTERED("PATIENT_ALREADY_REGISTERED", "Patient with same CNP already exists");
 
     private String errorId;
 

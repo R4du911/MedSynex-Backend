@@ -4,7 +4,6 @@ import com.example.medsynex.controller.AuthController;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.*;
-import com.example.medsynex.model.dto.RegisterAsDoctorRequestDTO;
 import com.example.medsynex.model.dto.RegisterRequestDTO;
 import com.example.medsynex.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.print.Doc;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -87,7 +80,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new BusinessException(BusinessExceptionCode.INVALID_USER_FORMAT);
         }
 
-        Role role = roleRepository.findByName(registerRequest.getRole()).orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER_FORMAT));
+        Role role = roleRepository.findByName(registerRequest.getRole())
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER_FORMAT));
 
         User userToSave = User.builder()
                 .firstName(registerRequest.getFirstName())
@@ -105,6 +99,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void registerUserAsPatient(String username, Long cnp, FamilyDoctor selectedFamilyDoctor) throws BusinessException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        if (patientRepository.findById(cnp).isPresent()) {
+            throw new BusinessException(BusinessExceptionCode.PATIENT_ALREADY_REGISTERED);
+        }
 
         Patient patientToSave = Patient.builder()
                 .cnp(cnp)
