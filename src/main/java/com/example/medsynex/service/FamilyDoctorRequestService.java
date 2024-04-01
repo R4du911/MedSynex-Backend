@@ -46,6 +46,9 @@ public class FamilyDoctorRequestService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
 
+        if(user.getPatient() == null)
+            throw new BusinessException(BusinessExceptionCode.INVALID_USER);
+
         FamilyDoctorRequest familyDoctorRequestToSave = FamilyDoctorRequest.builder()
                 .patient(user.getPatient())
                 .familyDoctor(selectedFamilyDoctor)
