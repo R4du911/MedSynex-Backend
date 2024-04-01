@@ -21,8 +21,25 @@ public class FamilyDoctorRequestService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<FamilyDoctorRequest> getAllFamilyDoctorRequest() {
-        return this.familyDoctorRequestRepository.findAll();
+    public List<FamilyDoctorRequest> getAllFamilyDoctorRequestForAGivenFamilyDoctor(String username) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        if(user.getFamilyDoctor() == null)
+            throw new BusinessException(BusinessExceptionCode.INVALID_USER);
+
+        return this.familyDoctorRequestRepository.findAllByFamilyDoctor(user.getFamilyDoctor());
+    }
+
+    public List<FamilyDoctorRequest> getAllFamilyDoctorRequestForAGivenPatient(String username) throws BusinessException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+
+        if(user.getPatient() == null)
+            throw new BusinessException(BusinessExceptionCode.INVALID_USER);
+
+
+        return this.familyDoctorRequestRepository.findAllByPatient(user.getPatient());
     }
 
     public void makeAFamilyDoctorRequest(String username, FamilyDoctor selectedFamilyDoctor) throws BusinessException {

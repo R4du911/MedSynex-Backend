@@ -18,9 +18,14 @@ public class FamilyDoctorRequestController {
     @Autowired
     private FamilyDoctorRequestService familyDoctorRequestService;
 
-    @GetMapping
-    public ResponseEntity<List<FamilyDoctorRequest>> getAllFamilyDoctorRequest() {
-        return new ResponseEntity<>(familyDoctorRequestService.getAllFamilyDoctorRequest(), HttpStatus.OK);
+    @GetMapping("/family-doctor/{username}")
+    public ResponseEntity<List<FamilyDoctorRequest>> getAllFamilyDoctorRequestForAGivenFamilyDoctor(@PathVariable String username) throws BusinessException {
+        return new ResponseEntity<>(familyDoctorRequestService.getAllFamilyDoctorRequestForAGivenFamilyDoctor(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/patient/{username}")
+    public ResponseEntity<List<FamilyDoctorRequest>> getAllFamilyDoctorRequestForAGivenPatient(@PathVariable String username) throws BusinessException {
+        return new ResponseEntity<>(familyDoctorRequestService.getAllFamilyDoctorRequestForAGivenPatient(username), HttpStatus.OK);
     }
 
     @PostMapping("/make/{username}")

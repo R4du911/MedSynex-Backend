@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 public class FamilyDoctorRequest {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patient_cnp")
     private Patient patient;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "family_doctor_id")
     private FamilyDoctor familyDoctor;
 }
