@@ -33,4 +33,16 @@ public class FamilyDoctorRequestController {
         familyDoctorRequestService.makeAFamilyDoctorRequest(username, selectedFamilyDoctor);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/accept")
+    public ResponseEntity<String> acceptRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
+        familyDoctorRequestService.acceptRequest(familyDoctorRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/decline")
+    public ResponseEntity<String> declineRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
+        familyDoctorRequestService.declineRequest(familyDoctorRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

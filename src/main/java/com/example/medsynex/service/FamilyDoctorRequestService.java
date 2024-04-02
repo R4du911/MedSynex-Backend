@@ -4,8 +4,11 @@ import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.FamilyDoctor;
 import com.example.medsynex.model.FamilyDoctorRequest;
+import com.example.medsynex.model.Patient;
 import com.example.medsynex.model.User;
+import com.example.medsynex.repository.FamilyDoctorRepository;
 import com.example.medsynex.repository.FamilyDoctorRequestRepository;
+import com.example.medsynex.repository.PatientRepository;
 import com.example.medsynex.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,12 @@ public class FamilyDoctorRequestService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private FamilyDoctorRepository familyDoctorRepository;
 
     public List<FamilyDoctorRequest> getAllFamilyDoctorRequestForAGivenFamilyDoctor(String username) throws BusinessException {
         User user = userRepository.findByUsername(username)
@@ -55,5 +64,21 @@ public class FamilyDoctorRequestService {
                 .build();
 
         familyDoctorRequestRepository.save(familyDoctorRequestToSave);
+    }
+
+    public void acceptRequest(FamilyDoctorRequest familyDoctorRequest) {
+        Patient patient = familyDoctorRequest.getPatient();
+        patient.setFamilyDoctor(familyDoctorRequest.getFamilyDoctor());
+        patientRepository.save(patient);
+
+        FamilyDoctor familyDoctor = familyDoctorRequest.getFamilyDoctor();
+        familyDoctor.setNrPatients(familyDoctor.getNrPatients() + 1);
+        familyDoctorRepository.save(familyDoctor);
+
+        familyDoctorRequestRepository.delete(familyDoctorRequest);
+    }
+
+    public void declineRequest(FamilyDoctorRequest familyDoctorRequest) {
+        familyDoctorRequestRepository.delete(familyDoctorRequest);
     }
 }
