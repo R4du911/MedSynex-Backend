@@ -52,6 +52,10 @@ public class FamilyDoctorRequestService {
     }
 
     public void makeAFamilyDoctorRequest(String username, FamilyDoctor selectedFamilyDoctor) throws BusinessException {
+        if (selectedFamilyDoctor.getNrPatients() >= 20) {
+            throw new BusinessException(BusinessExceptionCode.FAMILY_DOCTOR_HAS_MAX_PATIENTS);
+        }
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
 
@@ -76,6 +80,11 @@ public class FamilyDoctorRequestService {
         familyDoctorRepository.save(familyDoctor);
 
         familyDoctorRequestRepository.delete(familyDoctorRequest);
+        familyDoctorRequestRepository.deleteFamilyDoctorRequestByPatient(patient);
+
+        if (familyDoctor.getNrPatients() == 20) {
+            familyDoctorRequestRepository.deleteFamilyDoctorRequestByFamilyDoctor(familyDoctor);
+        }
     }
 
     public void declineRequest(FamilyDoctorRequest familyDoctorRequest) {

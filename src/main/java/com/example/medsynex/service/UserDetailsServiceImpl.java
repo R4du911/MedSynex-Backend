@@ -58,6 +58,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return this.userRepository.findAllByFamilyDoctorIsNotNull();
     }
 
+    public List<User> getAllUsersWhichAreRegisteredAsPatients() {
+        return this.userRepository.findAllByPatientIsNotNull();
+    }
+
     public void registerUser(RegisterRequestDTO registerRequest) throws BusinessException {
         if(userRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
             throw new BusinessException(BusinessExceptionCode.USERNAME_ALREADY_REGISTERED);
@@ -102,6 +106,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (patientRepository.findById(cnp).isPresent()) {
             throw new BusinessException(BusinessExceptionCode.PATIENT_ALREADY_REGISTERED);
+        }
+
+        if (selectedFamilyDoctor.getNrPatients() >= 20) {
+            throw new BusinessException(BusinessExceptionCode.FAMILY_DOCTOR_HAS_MAX_PATIENTS);
         }
 
         Patient patientToSave = Patient.builder()

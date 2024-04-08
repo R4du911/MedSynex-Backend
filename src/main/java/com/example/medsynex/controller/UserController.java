@@ -31,6 +31,11 @@ public class UserController {
         return new ResponseEntity<>(this.userService.getAllUsersWhichAreRegisteredAsFamilyDoctors(), HttpStatus.OK);
     }
 
+    @GetMapping("/retrieve-patients")
+    public ResponseEntity<List<User>> getAllUsersWhichAreRegisteredAsPatients() {
+        return new ResponseEntity<>(this.userService.getAllUsersWhichAreRegisteredAsPatients(), HttpStatus.OK);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDTO registerRequest) throws BusinessException {
         this.userService.registerUser(registerRequest);
@@ -38,25 +43,25 @@ public class UserController {
     }
 
     @PostMapping("register/patient/{username}")
-    public ResponseEntity<String> registerUserAsPatient(@PathVariable String username, @RequestBody RegisterAsPatientRequestDTO registerAsPatientRequestDTO) throws BusinessException {
+    public ResponseEntity<Void> registerUserAsPatient(@PathVariable String username, @RequestBody RegisterAsPatientRequestDTO registerAsPatientRequestDTO) throws BusinessException {
         this.userService.registerUserAsPatient(username, registerAsPatientRequestDTO.getCnp(), registerAsPatientRequestDTO.getFamilyDoctor());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/family-doctor/{username}")
-    public ResponseEntity<String> registerUserAsFamilyDoctor(@PathVariable String username, @RequestBody Dispensary dispensary) throws BusinessException {
+    public ResponseEntity<Void> registerUserAsFamilyDoctor(@PathVariable String username, @RequestBody Dispensary dispensary) throws BusinessException {
         this.userService.registerUserAsFamilyDoctor(username, dispensary);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/doctor/{username}")
-    public ResponseEntity<String> registerUserAsDoctor(@PathVariable String username, @RequestBody RegisterAsDoctorRequestDTO registerAsDoctorRequestDTO) throws BusinessException {
+    public ResponseEntity<Void> registerUserAsDoctor(@PathVariable String username, @RequestBody RegisterAsDoctorRequestDTO registerAsDoctorRequestDTO) throws BusinessException {
         this.userService.registerUserAsDoctor(username, registerAsDoctorRequestDTO.getHospital(), registerAsDoctorRequestDTO.getSpecialization());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/laboratory/{username}")
-    public ResponseEntity<String> registerUserAsLaboratory(@PathVariable String username, @RequestBody Laboratory laboratory) throws BusinessException {
+    public ResponseEntity<Void> registerUserAsLaboratory(@PathVariable String username, @RequestBody Laboratory laboratory) throws BusinessException {
         this.userService.registerUserAsLaboratory(username, laboratory);
         return new ResponseEntity<>(HttpStatus.OK);
     }

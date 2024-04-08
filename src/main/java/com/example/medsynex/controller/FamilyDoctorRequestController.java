@@ -29,19 +29,19 @@ public class FamilyDoctorRequestController {
     }
 
     @PostMapping("/make/{username}")
-    public ResponseEntity<String> makeAFamilyDoctorRequest(@PathVariable String username, @RequestBody FamilyDoctor selectedFamilyDoctor) throws BusinessException {
+    public ResponseEntity<Void> makeAFamilyDoctorRequest(@PathVariable String username, @RequestBody FamilyDoctor selectedFamilyDoctor) throws BusinessException {
         familyDoctorRequestService.makeAFamilyDoctorRequest(username, selectedFamilyDoctor);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<String> acceptRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
+    public ResponseEntity<Void> acceptRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
         familyDoctorRequestService.acceptRequest(familyDoctorRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/decline")
-    public ResponseEntity<String> declineRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
+    public ResponseEntity<Void> declineRequest(@RequestBody FamilyDoctorRequest familyDoctorRequest) {
         familyDoctorRequestService.declineRequest(familyDoctorRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }

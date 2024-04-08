@@ -13,4 +13,6 @@ import java.util.List;
 public interface FamilyDoctorRequestRepository extends JpaRepository<FamilyDoctorRequest, FamilyDoctorRequestPK> {
     List<FamilyDoctorRequest> findAllByFamilyDoctor(FamilyDoctor familyDoctor);
     List<FamilyDoctorRequest> findAllByPatient(Patient patient);
+    void deleteFamilyDoctorRequestByPatient(Patient patient);
+    void deleteFamilyDoctorRequestByFamilyDoctor(FamilyDoctor familyDoctor);
 }
