@@ -6,6 +6,7 @@ import com.example.medsynex.model.FamilyDoctor;
 import com.example.medsynex.model.FamilyDoctorRequest;
 import com.example.medsynex.model.Patient;
 import com.example.medsynex.model.User;
+import com.example.medsynex.model.compositeKeys.FamilyDoctorRequestPK;
 import com.example.medsynex.repository.FamilyDoctorRepository;
 import com.example.medsynex.repository.FamilyDoctorRequestRepository;
 import com.example.medsynex.repository.PatientRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FamilyDoctorRequestService {
@@ -61,6 +63,11 @@ public class FamilyDoctorRequestService {
 
         if(user.getPatient() == null)
             throw new BusinessException(BusinessExceptionCode.INVALID_USER);
+
+        Optional<FamilyDoctorRequest> familyDoctorRequest = familyDoctorRequestRepository.findById(
+                new FamilyDoctorRequestPK(user.getPatient().getCnp(), selectedFamilyDoctor.getId()));
+        if(familyDoctorRequest.isPresent())
+            throw new BusinessException(BusinessExceptionCode.FAMILY_DOCTOR_REQUEST_ALREADY_EXISTS);
 
         FamilyDoctorRequest familyDoctorRequestToSave = FamilyDoctorRequest.builder()
                 .patient(user.getPatient())

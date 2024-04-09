@@ -17,7 +17,8 @@ public enum BusinessExceptionCode {
     EMAIL_ALREADY_REGISTERED("EMAIL_ALREADY_REGISTERED","User already registered with this email"),
     INVALID_USER("INVALID_USER", "User is not registered"),
     PATIENT_ALREADY_REGISTERED("PATIENT_ALREADY_REGISTERED", "Patient with same CNP already exists"),
-    FAMILY_DOCTOR_HAS_MAX_PATIENTS("FAMILY_DOCTOR_HAS_MAX_PATIENTS", "Family doctor already has maximum number of patients");
+    FAMILY_DOCTOR_HAS_MAX_PATIENTS("FAMILY_DOCTOR_HAS_MAX_PATIENTS", "Family doctor already has maximum number of patients"),
+    FAMILY_DOCTOR_REQUEST_ALREADY_EXISTS("FAMILY_DOCTOR_REQUEST_ALREADY_EXISTS", "A family doctor request with this patient and family doctor already exists");
 
     private String errorId;
 
