@@ -11,6 +11,7 @@ import com.example.medsynex.repository.FamilyDoctorRepository;
 import com.example.medsynex.repository.FamilyDoctorRequestRepository;
 import com.example.medsynex.repository.PatientRepository;
 import com.example.medsynex.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,7 @@ public class FamilyDoctorRequestService {
         familyDoctorRequestRepository.save(familyDoctorRequestToSave);
     }
 
+    @Transactional
     public void acceptRequest(FamilyDoctorRequest familyDoctorRequest) {
         Patient patient = familyDoctorRequest.getPatient();
         patient.setFamilyDoctor(familyDoctorRequest.getFamilyDoctor());
@@ -86,7 +88,6 @@ public class FamilyDoctorRequestService {
         familyDoctor.setNrPatients(familyDoctor.getNrPatients() + 1);
         familyDoctorRepository.save(familyDoctor);
 
-        familyDoctorRequestRepository.delete(familyDoctorRequest);
         familyDoctorRequestRepository.deleteFamilyDoctorRequestByPatient(patient);
 
         if (familyDoctor.getNrPatients() == 20) {
