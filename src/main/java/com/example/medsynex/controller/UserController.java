@@ -12,6 +12,7 @@ import com.example.medsynex.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,11 @@ public class UserController {
 
     @Autowired
     private UserDetailsServiceImpl userService;
+
+    @GetMapping("/current-user/{username}")
+    public ResponseEntity<User> getCurrentUserDetails(@PathVariable String username) throws BusinessException {
+        return new ResponseEntity<>(this.userService.getCurrentUserDetails(username), HttpStatus.OK);
+    }
 
     @GetMapping("/retrieve-family-doctors")
     public ResponseEntity<List<User>> getAllUsersWhichAreRegisteredAsFamilyDoctors() {

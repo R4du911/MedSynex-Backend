@@ -54,6 +54,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 
+    public User getCurrentUserDetails(String username) throws BusinessException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_USER));
+    }
+
     public List<User> getAllUsersWhichAreRegisteredAsFamilyDoctors() {
         return this.userRepository.findAllByFamilyDoctorIsNotNull();
     }
