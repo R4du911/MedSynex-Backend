@@ -1,0 +1,27 @@
+package com.example.medsynex.controller;
+
+import com.example.medsynex.model.LaboratoryAnalysisResult;
+import com.example.medsynex.service.LaboratoryAnalysisResultService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/laboratory-analysis-result")
+public class LaboratoryAnalysisResultController {
+
+    @Autowired
+    private LaboratoryAnalysisResultService laboratoryAnalysisResultService;
+
+    @GetMapping("/{cnp}")
+    public ResponseEntity<List<LaboratoryAnalysisResult>> getAllLaboratoryAnalysisResultsByPatient(@PathVariable Long cnp) {
+        return new ResponseEntity<>(laboratoryAnalysisResultService.getAllLaboratoryAnalysisResultsByPatient(cnp), HttpStatus.OK);
+    }
+
+}
