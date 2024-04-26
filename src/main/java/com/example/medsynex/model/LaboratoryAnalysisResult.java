@@ -42,7 +42,7 @@ public class LaboratoryAnalysisResult {
 
     private String laboratoryName;
 
-    private boolean diabetesRisk;
+    private Boolean diabetesRisk;
 
     private String remarks;
 }
