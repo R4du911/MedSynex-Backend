@@ -42,7 +42,9 @@ public class LaboratoryAnalysisResult {
 
     private String laboratoryName;
 
+    @Column(nullable = true)
     private Boolean diabetesRisk;
 
+    @Column(nullable = true)
     private String remarks;
 }
