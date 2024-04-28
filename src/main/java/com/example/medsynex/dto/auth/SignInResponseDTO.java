@@ -1,4 +1,4 @@
-package com.example.medsynex.model.dto;
+package com.example.medsynex.dto.auth;
 
 import lombok.Data;
 

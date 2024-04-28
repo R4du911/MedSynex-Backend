@@ -1,4 +1,4 @@
-package com.example.medsynex.model.dto;
+package com.example.medsynex.dto.register;
 
 import com.example.medsynex.model.Hospital;
 import com.example.medsynex.model.Specialization;

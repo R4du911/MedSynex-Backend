@@ -2,8 +2,8 @@ package com.example.medsynex.controller;
 
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.model.Consultation;
-import com.example.medsynex.model.dto.CreateConsultationRequestDTO;
-import com.example.medsynex.model.dto.UpdateConsultationRequestDTO;
+import com.example.medsynex.dto.consultation.CreateConsultationRequestDTO;
+import com.example.medsynex.dto.consultation.UpdateConsultationRequestDTO;
 import com.example.medsynex.service.ConsultationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

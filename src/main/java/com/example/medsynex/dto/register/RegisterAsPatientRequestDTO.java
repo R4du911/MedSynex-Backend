@@ -1,4 +1,4 @@
-package com.example.medsynex.model.dto;
+package com.example.medsynex.dto.register;
 
 import com.example.medsynex.model.FamilyDoctor;
 import lombok.AllArgsConstructor;

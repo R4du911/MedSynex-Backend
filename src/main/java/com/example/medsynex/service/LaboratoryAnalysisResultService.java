@@ -5,7 +5,7 @@ import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.LaboratoryAnalysisResult;
 import com.example.medsynex.model.Patient;
 import com.example.medsynex.model.User;
-import com.example.medsynex.model.dto.CreateLaboratoryAnalysisResultRequestDTO;
+import com.example.medsynex.dto.laboratoryAnalysisResult.CreateLaboratoryAnalysisResultRequestDTO;
 import com.example.medsynex.repository.LaboratoryAnalysisResultRepository;
 import com.example.medsynex.repository.PatientRepository;
 import com.example.medsynex.repository.UserRepository;

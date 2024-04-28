@@ -2,7 +2,7 @@ package com.example.medsynex.controller;
 
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.model.LaboratoryAnalysisResult;
-import com.example.medsynex.model.dto.CreateLaboratoryAnalysisResultRequestDTO;
+import com.example.medsynex.dto.laboratoryAnalysisResult.CreateLaboratoryAnalysisResultRequestDTO;
 import com.example.medsynex.service.LaboratoryAnalysisResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

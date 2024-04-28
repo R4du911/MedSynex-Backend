@@ -4,7 +4,7 @@ import com.example.medsynex.controller.AuthController;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.*;
-import com.example.medsynex.model.dto.RegisterRequestDTO;
+import com.example.medsynex.dto.register.RegisterRequestDTO;
 import com.example.medsynex.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

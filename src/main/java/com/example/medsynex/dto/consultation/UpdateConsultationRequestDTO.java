@@ -1,4 +1,4 @@
-package com.example.medsynex.model.dto;
+package com.example.medsynex.dto.consultation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
