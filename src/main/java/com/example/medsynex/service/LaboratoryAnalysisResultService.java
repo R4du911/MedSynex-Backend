@@ -1,5 +1,6 @@
 package com.example.medsynex.service;
 
+import com.example.medsynex.dto.laboratoryAnalysisResult.UpdateRemarksLaboratoryAnalysisResultRequestDTO;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.LaboratoryAnalysisResult;
@@ -60,5 +61,17 @@ public class LaboratoryAnalysisResultService {
                 .build();
 
         laboratoryAnalysisResultRepository.save(laboratoryAnalysisResultToSave);
+    }
+
+    public void updateRemarksForLaboratoryAnalysisResult(Long cnp, UpdateRemarksLaboratoryAnalysisResultRequestDTO updateRemarksLaboratoryAnalysisResultRequestDTO) throws BusinessException {
+        patientRepository.findById(cnp).orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_PATIENT));
+
+        LaboratoryAnalysisResult laboratoryAnalysisResultFromDB = laboratoryAnalysisResultRepository.findById(updateRemarksLaboratoryAnalysisResultRequestDTO.getId())
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_DATA));
+
+        laboratoryAnalysisResultFromDB.setUpdateDate(LocalDate.now());
+        laboratoryAnalysisResultFromDB.setRemarks(updateRemarksLaboratoryAnalysisResultRequestDTO.getRemarks());
+
+        laboratoryAnalysisResultRepository.save(laboratoryAnalysisResultFromDB);
     }
 }

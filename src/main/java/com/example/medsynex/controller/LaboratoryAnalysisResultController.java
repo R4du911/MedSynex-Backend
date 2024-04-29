@@ -1,5 +1,6 @@
 package com.example.medsynex.controller;
 
+import com.example.medsynex.dto.laboratoryAnalysisResult.UpdateRemarksLaboratoryAnalysisResultRequestDTO;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.model.LaboratoryAnalysisResult;
 import com.example.medsynex.dto.laboratoryAnalysisResult.CreateLaboratoryAnalysisResultRequestDTO;
@@ -26,6 +27,12 @@ public class LaboratoryAnalysisResultController {
     @PostMapping("{cnp}")
     public ResponseEntity<Void> createLaboratoryAnalysisResult(@PathVariable Long cnp, @RequestBody CreateLaboratoryAnalysisResultRequestDTO createLaboratoryAnalysisResultRequestDTO) throws BusinessException {
         laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createLaboratoryAnalysisResultRequestDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{cnp}/remarks")
+    public ResponseEntity<Void> updateRemarksForLaboratoryAnalysisResult(@PathVariable Long cnp, @RequestBody UpdateRemarksLaboratoryAnalysisResultRequestDTO updateRemarksLaboratoryAnalysisResultRequestDTO) throws BusinessException {
+        laboratoryAnalysisResultService.updateRemarksForLaboratoryAnalysisResult(cnp, updateRemarksLaboratoryAnalysisResultRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
