@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
                     corsConfiguration.addAllowedOrigin("http://localhost:4200");
+                    corsConfiguration.addAllowedOrigin("http://localhost:5000");
                     corsConfiguration.addAllowedHeader("*");
                     corsConfiguration.addAllowedMethod("*");
                     corsConfiguration.setAllowCredentials(true);
