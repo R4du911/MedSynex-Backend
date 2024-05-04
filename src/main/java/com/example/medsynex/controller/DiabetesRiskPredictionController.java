@@ -21,7 +21,7 @@ public class DiabetesRiskPredictionController {
         return new ResponseEntity<>(diabetesRiskPredictionService.getDiabetesRiskPredictionSavedData(cnp), HttpStatus.OK);
     }
 
-    @PostMapping("{cnp}")
+    @PostMapping("/{cnp}")
     public ResponseEntity<Void> requestDiabetesRiskPrediction(@PathVariable Long cnp, @RequestBody DiabetesRiskPredictionRequestDTO diabetesRiskPredictionRequestDTO) throws BusinessException {
         diabetesRiskPredictionService.requestDiabetesRiskPrediction(cnp, diabetesRiskPredictionRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);

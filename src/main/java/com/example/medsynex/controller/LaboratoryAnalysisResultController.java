@@ -24,7 +24,7 @@ public class LaboratoryAnalysisResultController {
         return new ResponseEntity<>(laboratoryAnalysisResultService.getAllLaboratoryAnalysisResultsByPatient(cnp), HttpStatus.OK);
     }
 
-    @PostMapping("{cnp}")
+    @PostMapping("/{cnp}")
     public ResponseEntity<Void> createLaboratoryAnalysisResult(@PathVariable Long cnp, @RequestBody CreateLaboratoryAnalysisResultRequestDTO createLaboratoryAnalysisResultRequestDTO) throws BusinessException {
         laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createLaboratoryAnalysisResultRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
