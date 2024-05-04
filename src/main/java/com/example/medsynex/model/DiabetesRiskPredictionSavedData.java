@@ -1,6 +1,5 @@
 package com.example.medsynex.model;
 
-import com.example.medsynex.dto.diabetesRiskPrediction.ESkinThicknessCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +23,7 @@ public class DiabetesRiskPredictionSavedData {
     private Patient patient;
 
     private Integer pregnancies;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ESkinThicknessCategory skinThicknessCategory;
-
+    private Double skinThickness;
     private Integer firstDegreeDiabetesCount;
     private Integer secondDegreeDiabetesCount;
     private Integer age;

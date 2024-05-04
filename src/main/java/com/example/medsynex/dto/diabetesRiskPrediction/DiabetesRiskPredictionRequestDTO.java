@@ -10,7 +10,7 @@ public class DiabetesRiskPredictionRequestDTO {
     private Integer pregnancies;
     private Double glucose;
     private Double bloodPressure;
-    private ESkinThicknessCategory skinThicknessCategory;
+    private Double skinThickness;
     private Double insulin;
     private Double height;
     private Double weight;

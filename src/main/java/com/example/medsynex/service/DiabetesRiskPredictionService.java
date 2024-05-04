@@ -2,7 +2,6 @@ package com.example.medsynex.service;
 
 import com.example.medsynex.dto.diabetesRiskPrediction.DiabetesRiskPredictionAIRequestDTO;
 import com.example.medsynex.dto.diabetesRiskPrediction.DiabetesRiskPredictionRequestDTO;
-import com.example.medsynex.dto.diabetesRiskPrediction.ESkinThicknessCategory;
 import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.DiabetesRiskPredictionSavedData;
@@ -50,7 +49,7 @@ public class DiabetesRiskPredictionService {
                 .Pregnancies(diabetesRiskPredictionRequestDTO.getPregnancies())
                 .Glucose(diabetesRiskPredictionRequestDTO.getGlucose())
                 .BloodPressure(diabetesRiskPredictionRequestDTO.getBloodPressure())
-                .SkinThickness(calculateSkinThickness(diabetesRiskPredictionRequestDTO.getSkinThicknessCategory()))
+                .SkinThickness(scaleSkinThickness(diabetesRiskPredictionRequestDTO.getSkinThickness()))
                 .Insulin(diabetesRiskPredictionRequestDTO.getInsulin())
                 .BMI(bmi)
                 .DiabetesPedigreeFunction(diabetesPedigreeFunction)
@@ -73,7 +72,7 @@ public class DiabetesRiskPredictionService {
         }
 
         diabetesRiskPredictionSavedData.setPregnancies(diabetesRiskPredictionRequestDTO.getPregnancies());
-        diabetesRiskPredictionSavedData.setSkinThicknessCategory(diabetesRiskPredictionRequestDTO.getSkinThicknessCategory());
+        diabetesRiskPredictionSavedData.setSkinThickness(diabetesRiskPredictionRequestDTO.getSkinThickness());
         diabetesRiskPredictionSavedData.setFirstDegreeDiabetesCount(diabetesRiskPredictionRequestDTO.getFirstDegreeDiabetesCount());
         diabetesRiskPredictionSavedData.setSecondDegreeDiabetesCount(diabetesRiskPredictionRequestDTO.getSecondDegreeDiabetesCount());
         diabetesRiskPredictionSavedData.setAge(diabetesRiskPredictionRequestDTO.getAge());
@@ -82,16 +81,6 @@ public class DiabetesRiskPredictionService {
         diabetesRiskPredictionRepository.save(diabetesRiskPredictionSavedData);
     }
 
-    private double calculateSkinThickness(ESkinThicknessCategory skinThicknessCategory) {
-        if (skinThicknessCategory == ESkinThicknessCategory.THIN)
-            return scaleSkinThickness(1.2);
-        if (skinThicknessCategory == ESkinThicknessCategory.AVERAGE)
-            return scaleSkinThickness(2.0);
-        if (skinThicknessCategory == ESkinThicknessCategory.THICK)
-            return scaleSkinThickness(2.5);
-
-        return 0;
-    }
 
     private double scaleSkinThickness(double value) {
         return ((value - 0.3) / (2.6 - 0.3)) * (70.0 - 1.0) + 1.0;
