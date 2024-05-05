@@ -1,5 +1,6 @@
 package com.example.medsynex.dto.diabetesRiskPrediction;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,12 +9,27 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class DiabetesRiskPredictionAIRequestDTO {
-    private Integer Pregnancies;
-    private Double Glucose;
-    private Double BloodPressure;
-    private Double SkinThickness;
-    private Double Insulin;
-    private Double BMI;
-    private Double DiabetesPedigreeFunction;
-    private Integer Age;
+    @JsonProperty("Pregnancies")
+    private Integer pregnancies;
+
+    @JsonProperty("Glucose")
+    private Double glucose;
+
+    @JsonProperty("BloodPressure")
+    private Double bloodPressure;
+
+    @JsonProperty("SkinThickness")
+    private Double skinThickness;
+
+    @JsonProperty("Insulin")
+    private Double insulin;
+
+    @JsonProperty("BMI")
+    private Double bmi;
+
+    @JsonProperty("DiabetesPedigreeFunction")
+    private Double diabetesPedigreeFunction;
+
+    @JsonProperty("Age")
+    private Integer age;
 }

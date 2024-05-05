@@ -11,15 +11,12 @@ import com.example.medsynex.repository.DiabetesRiskPredictionRepository;
 import com.example.medsynex.repository.LaboratoryAnalysisResultRepository;
 import com.example.medsynex.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Collections;
 
 @Service
 public class DiabetesRiskPredictionService {
@@ -45,30 +42,36 @@ public class DiabetesRiskPredictionService {
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_DATA));
 
         Double bmi = diabetesRiskPredictionRequestDTO.getWeight() /
-                (diabetesRiskPredictionRequestDTO.getHeight() * diabetesRiskPredictionRequestDTO.getHeight());
+                ((diabetesRiskPredictionRequestDTO.getHeight() / 100) * (diabetesRiskPredictionRequestDTO.getHeight() / 100));
 
         Double diabetesPedigreeFunction = diabetesRiskPredictionRequestDTO.getFirstDegreeDiabetesCount() * 0.5 +
                 diabetesRiskPredictionRequestDTO.getSecondDegreeDiabetesCount() * 0.3;
 
         DiabetesRiskPredictionAIRequestDTO diabetesRiskPredictionAIRequestDTO = DiabetesRiskPredictionAIRequestDTO.builder()
-                .Pregnancies(diabetesRiskPredictionRequestDTO.getPregnancies())
-                .Glucose(diabetesRiskPredictionRequestDTO.getGlucose())
-                .BloodPressure(diabetesRiskPredictionRequestDTO.getBloodPressure())
-                .SkinThickness(scaleSkinThickness(diabetesRiskPredictionRequestDTO.getSkinThickness()))
-                .Insulin(diabetesRiskPredictionRequestDTO.getInsulin())
-                .BMI(bmi)
-                .DiabetesPedigreeFunction(diabetesPedigreeFunction)
-                .Age(diabetesRiskPredictionRequestDTO.getAge())
+                .pregnancies(diabetesRiskPredictionRequestDTO.getPregnancies())
+                .glucose(diabetesRiskPredictionRequestDTO.getGlucose())
+                .bloodPressure(diabetesRiskPredictionRequestDTO.getBloodPressure())
+                .skinThickness(scaleSkinThickness(diabetesRiskPredictionRequestDTO.getSkinThickness()))
+                .insulin(diabetesRiskPredictionRequestDTO.getInsulin())
+                .bmi(bmi)
+                .diabetesPedigreeFunction(diabetesPedigreeFunction)
+                .age(diabetesRiskPredictionRequestDTO.getAge())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<DiabetesRiskPredictionAIRequestDTO> entity = new HttpEntity<>(diabetesRiskPredictionAIRequestDTO, headers);
 
-        String diabetesRiskPredictionResult = restTemplate.exchange("http://localhost:5000/diabetes-prediction", HttpMethod.POST, entity, String.class).getBody();
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:5000/diabetes-prediction",
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
 
         laboratoryAnalysisResultFromDB.setUpdateDate(LocalDate.now());
-        laboratoryAnalysisResultFromDB.setDiabetesRisk(Boolean.parseBoolean(diabetesRiskPredictionResult));
+        laboratoryAnalysisResultFromDB.setDiabetesRisk(parseBooleanFromResponse(response.getBody()));
 
         DiabetesRiskPredictionSavedData diabetesRiskPredictionSavedData = diabetesRiskPredictionRepository.findByPatient(cnp);
 
@@ -91,8 +94,16 @@ public class DiabetesRiskPredictionService {
         diabetesRiskPredictionRepository.save(diabetesRiskPredictionSavedData);
     }
 
-
     private double scaleSkinThickness(double value) {
         return ((value - 0.3) / (2.6 - 0.3)) * (70.0 - 1.0) + 1.0;
+    }
+
+    private boolean parseBooleanFromResponse(String response) {
+        if (response != null) {
+            String trimmedResponse = response.trim();
+            return trimmedResponse.startsWith("1");
+        }
+
+        return false;
     }
 }
