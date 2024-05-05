@@ -6,8 +6,10 @@ import com.example.medsynex.exception.BusinessException;
 import com.example.medsynex.exception.BusinessExceptionCode;
 import com.example.medsynex.model.DiabetesRiskPredictionSavedData;
 import com.example.medsynex.model.LaboratoryAnalysisResult;
+import com.example.medsynex.model.Patient;
 import com.example.medsynex.repository.DiabetesRiskPredictionRepository;
 import com.example.medsynex.repository.LaboratoryAnalysisResultRepository;
+import com.example.medsynex.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,9 @@ public class DiabetesRiskPredictionService {
 
     @Autowired
     private LaboratoryAnalysisResultRepository laboratoryAnalysisResultRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Autowired
     RestTemplate restTemplate;
@@ -69,6 +74,11 @@ public class DiabetesRiskPredictionService {
 
         if (diabetesRiskPredictionSavedData == null) {
             diabetesRiskPredictionSavedData = new DiabetesRiskPredictionSavedData();
+
+            Patient patientFromDB = patientRepository.findById(cnp)
+                    .orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_PATIENT));
+
+            diabetesRiskPredictionSavedData.setPatient(patientFromDB);
         }
 
         diabetesRiskPredictionSavedData.setPregnancies(diabetesRiskPredictionRequestDTO.getPregnancies());
