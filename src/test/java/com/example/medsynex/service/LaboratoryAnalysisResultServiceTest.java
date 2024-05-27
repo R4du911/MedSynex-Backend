@@ -104,22 +104,20 @@ class LaboratoryAnalysisResultServiceTest {
         Long cnp = 1L;
         when(patientRepository.findById(cnp)).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createRequestDTO);
-        });
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createRequestDTO));
 
         assertEquals(BusinessExceptionCode.INVALID_PATIENT, exception.getBusinessExceptionCode());
     }
 
     @Test
-    void testCreateLaboratoryAnalysisResult_UserIsNotLabStaff() {
+    void testCreateLaboratoryAnalysisResult_UserDoesNotExist() {
         Long cnp = 1L;
         when(patientRepository.findById(cnp)).thenReturn(Optional.of(patient));
         when(userRepository.findByUsername("labStaff")).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createRequestDTO);
-        });
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                laboratoryAnalysisResultService.createLaboratoryAnalysisResult(cnp, createRequestDTO));
 
         assertEquals(BusinessExceptionCode.INVALID_USER, exception.getBusinessExceptionCode());
     }
@@ -142,9 +140,8 @@ class LaboratoryAnalysisResultServiceTest {
         Long cnp = 1L;
         when(patientRepository.findById(cnp)).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            laboratoryAnalysisResultService.updateRemarksForLaboratoryAnalysisResult(cnp, updateRequestDTO);
-        });
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                laboratoryAnalysisResultService.updateRemarksForLaboratoryAnalysisResult(cnp, updateRequestDTO));
 
         assertEquals(BusinessExceptionCode.INVALID_PATIENT, exception.getBusinessExceptionCode());
     }
@@ -155,9 +152,8 @@ class LaboratoryAnalysisResultServiceTest {
         when(patientRepository.findById(cnp)).thenReturn(Optional.of(patient));
         when(laboratoryAnalysisResultRepository.findById(updateRequestDTO.getId())).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            laboratoryAnalysisResultService.updateRemarksForLaboratoryAnalysisResult(cnp, updateRequestDTO);
-        });
+        BusinessException exception = assertThrows(BusinessException.class, () ->
+                laboratoryAnalysisResultService.updateRemarksForLaboratoryAnalysisResult(cnp, updateRequestDTO));
 
         assertEquals(BusinessExceptionCode.INVALID_DATA, exception.getBusinessExceptionCode());
     }
